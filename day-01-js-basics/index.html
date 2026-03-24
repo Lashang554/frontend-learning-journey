@@ -3,25 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Day 01 - JS Basics</title>
+  <title>Day 01 - JS Calculator</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
 
-  <h1>Day 01 - JavaScript Basics</h1>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
 
-  <h2>Simple Calculator</h2>
+  <div class="bg-white p-6 rounded-2xl shadow-lg w-80">
+    
+    <h1 class="text-xl font-bold text-center mb-4">
+      Simple Calculator
+    </h1>
 
-  <input type="number" id="num1" placeholder="Enter first number" />
-  <input type="number" id="num2" placeholder="Enter second number" />
+    <input 
+      type="number" 
+      id="num1" 
+      placeholder="First number"
+      class="w-full mb-3 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
 
-  <br /><br />
+    <input 
+      type="number" 
+      id="num2" 
+      placeholder="Second number"
+      class="w-full mb-4 p-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-400"
+    />
 
-  <button onclick="add()">Add</button>
-  <button onclick="subtract()">Subtract</button>
-  <button onclick="multiply()">Multiply</button>
-  <button onclick="divide()">Divide</button>
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="add()" class="bg-blue-500 text-white p-2 rounded-lg hover:bg-blue-600">Add</button>
+      <button onclick="subtract()" class="bg-yellow-500 text-white p-2 rounded-lg hover:bg-yellow-600">Subtract</button>
+      <button onclick="multiply()" class="bg-green-500 text-white p-2 rounded-lg hover:bg-green-600">Multiply</button>
+      <button onclick="divide()" class="bg-red-500 text-white p-2 rounded-lg hover:bg-red-600">Divide</button>
+    </div>
 
-  <h3 id="result">Result: </h3>
+    <h3 id="result" class="text-center mt-4 font-semibold text-lg">
+      Result: 0
+    </h3>
+
+  </div>
 
   <script src="script.js"></script>
 </body>
