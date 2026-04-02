@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
+  <title>Day 04 - Practice</title>
+
+  <!-- Tailwind CSS for styling -->
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<!-- 
+  id="body" → we will use this in JS
+  classes → default white background and black text
+-->
+<body id="body" class="bg-white text-black flex flex-col items-center justify-center h-screen gap-6">
+
+  <h1 class="text-2xl font-bold">Day 04 Practice</h1>
+
+  <!-- Button to toggle dark mode -->
+  <button id="toggleTheme" class="bg-blue-500 text-white px-4 py-2 rounded">
+    Toggle Dark Mode
+  </button>
+
+  <!-- Box that we will hide/show -->
+  <div id="box" class="w-40 h-40 bg-green-500"></div>
+
+  <!-- Button to hide/show the box -->
+  <button id="toggleBox" class="bg-red-500 text-white px-4 py-2 rounded">
+    Hide / Show Box
+  </button>
+
+  <!-- Link JS file -->
+  <script src="script.js"></script>
+</body>
+</html>
