@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Day 05 - Calculator</title>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+
+  <div class="bg-white p-6 rounded-xl shadow-lg w-80">
+    
+    <h1 class="text-xl font-bold text-center mb-4">Calculator</h1>
+
+    <input id="num1" type="number" placeholder="First number" class="w-full mb-2 p-2 border rounded"/>
+    <input id="num2" type="number" placeholder="Second number" class="w-full mb-4 p-2 border rounded"/>
+
+    <div class="grid grid-cols-2 gap-2">
+      <button onclick="calculate('add')" class="bg-blue-500 text-white p-2 rounded">Add</button>
+      <button onclick="calculate('sub')" class="bg-yellow-500 text-white p-2 rounded">Subtract</button>
+      <button onclick="calculate('mul')" class="bg-green-500 text-white p-2 rounded">Multiply</button>
+      <button onclick="calculate('div')" class="bg-red-500 text-white p-2 rounded">Divide</button>
+    </div>
+
+    <h2 id="result" class="text-center mt-4 font-bold">Result: 0</h2>
+
+  </div>
+
+</body>
+</html>
