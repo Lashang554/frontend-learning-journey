@@ -1,10 +1,10 @@
 function calculate(type) {
 
-  // 1. Convert values to number
+  // 1. Get and convert values
   let num1 = Number(document.getElementById("num1").value);
   let num2 = Number(document.getElementById("num2").value);
 
-  // 2. Store result
+  // 2. Result variable
   let result;
 
   // 3. Perform operation
@@ -18,9 +18,15 @@ function calculate(type) {
     result = num1 * num2;
   } 
   else if (type === "div") {
-    result = num1 / num2;
+
+    // 4. Handle divide by zero
+    if (num2 === 0) {
+      result = "Cannot divide by 0";
+    } else {
+      result = num1 / num2;
+    }
   }
 
-  // 4. Log result (for now)
-  console.log(result);
+  // 5. Display result on screen
+  document.getElementById("result").innerText = "Result: " + result;
 }
