@@ -24,15 +24,23 @@
 
 
 
-
 "use client";
 
+import { useState } from "react";
+
 export default function Home() {
+  const [task, setTask] = useState("");
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Todo App</h1>
 
-      <input placeholder="Enter task" />
+      <input
+        value={task}
+        onChange={(e) => setTask(e.target.value)}
+        placeholder="Enter task"
+      />
+
       <button>Add</button>
     </div>
   );
