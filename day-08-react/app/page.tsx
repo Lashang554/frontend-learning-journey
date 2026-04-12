@@ -107,33 +107,45 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export default function Home() {
   const [task, setTask] = useState<string>("");
   type Task = {
-  text: string;
-  completed: boolean;
-};
+    text: string;
+    completed: boolean;
+  };
 
-const [tasks, setTasks] = useState<Task[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
 
   const addTask = () => {
     if (task.trim() === "") return;
 
-setTasks([...tasks, { text: task, completed: false }]);
+    setTasks([...tasks, { text: task, completed: false }]);
     setTask("");
   };
 
   const deleteTask = (index: number) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
-    const toggleComplete = (index: number) => {
+  const toggleComplete = (index: number) => {
     const newTasks = [...tasks];
     newTasks[index].completed = !newTasks[index].completed;
     setTasks(newTasks);
   };
 
+  // load tasks
+  useEffect(() => {
+    const saved = localStorage.getItem("tasks");
+    if (saved) {
+      setTasks(JSON.parse(saved));
+    }
+  }, []);
+
+  // save tasks
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
 
 
   return (
@@ -176,14 +188,13 @@ setTasks([...tasks, { text: task, completed: false }]);
                 key={index}
                 className="flex justify-between items-center bg-gray-100 p-3 rounded-xl shadow-sm hover:shadow-md transition"
               >
-<span
-  onClick={() => toggleComplete(index)}
-  className={`cursor-pointer ${
-    t.completed ? "line-through text-gray-400" : "text-gray-800"
-  }`}
->
-  {t.text}
-</span>
+                <span
+                  onClick={() => toggleComplete(index)}
+                  className={`cursor-pointer ${t.completed ? "line-through text-gray-400" : "text-gray-800"
+                    }`}
+                >
+                  {t.text}
+                </span>
                 <button
                   onClick={() => deleteTask(index)}
                   className="text-red-500 hover:text-red-700 font-bold"
