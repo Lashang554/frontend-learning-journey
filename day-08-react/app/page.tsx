@@ -128,6 +128,13 @@ setTasks([...tasks, { text: task, completed: false }]);
   const deleteTask = (index: number) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
+    const toggleComplete = (index: number) => {
+    const newTasks = [...tasks];
+    newTasks[index].completed = !newTasks[index].completed;
+    setTasks(newTasks);
+  };
+
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
@@ -169,8 +176,14 @@ setTasks([...tasks, { text: task, completed: false }]);
                 key={index}
                 className="flex justify-between items-center bg-gray-100 p-3 rounded-xl shadow-sm hover:shadow-md transition"
               >
-                <span className="text-gray-800">{t.text}</span>
-
+<span
+  onClick={() => toggleComplete(index)}
+  className={`cursor-pointer ${
+    t.completed ? "line-through text-gray-400" : "text-gray-800"
+  }`}
+>
+  {t.text}
+</span>
                 <button
                   onClick={() => deleteTask(index)}
                   className="text-red-500 hover:text-red-700 font-bold"
