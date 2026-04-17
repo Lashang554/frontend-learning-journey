@@ -265,7 +265,16 @@ export default function Home() {
 const [search, setSearch] = useState<string>("");
 
 
+const filteredTasks = tasks.filter((t) => {
+  // filter by status
+  if (filter === "active" && t.completed) return false;
+  if (filter === "completed" && !t.completed) return false;
 
+  // filter by search
+  if (!t.text.toLowerCase().includes(search.toLowerCase())) return false;
+
+  return true;
+});
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-500 via-purple-500 to-pink-500 p-4">
 
