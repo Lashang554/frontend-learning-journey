@@ -10,12 +10,7 @@ export default function TodoInput({ task, setTask, addTask }: Props) {
   return (
     <div className="flex gap-2 mb-6 text-gray-900">
 
-      <input
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        placeholder="Search tasks..."
-        className="w-full mb-4 px-4 py-2 border rounded-xl"
-      />
+      
       <input
         value={task}
         onChange={(e) => setTask(e.target.value)}
