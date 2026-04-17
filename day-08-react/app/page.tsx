@@ -242,7 +242,7 @@ export default function Home() {
     setTask("");
   };
 
-  // ❌ Delete
+  // ❌ Delete task
   const deleteTask = (index: number) => {
     setTasks(tasks.filter((_, i) => i !== index));
   };
@@ -254,7 +254,7 @@ export default function Home() {
     setTasks(newTasks);
   };
 
-  // 💾 Load
+  // 💾 Load from localStorage
   useEffect(() => {
     const saved = localStorage.getItem("tasks");
     if (saved) {
@@ -262,12 +262,12 @@ export default function Home() {
     }
   }, []);
 
-  // 💾 Save
+  // 💾 Save to localStorage
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
 
-  // 🔍 Filter logic
+  // 🔍 Filter + Search logic
   const filteredTasks = tasks.filter((t) => {
     if (filter === "active" && t.completed) return false;
     if (filter === "completed" && !t.completed) return false;
@@ -291,7 +291,7 @@ export default function Home() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search tasks..."
-          className="w-full mb-4 px-4 py-2 border rounded-xl"
+          className="w-full mb-4 px-4 py-2 border rounded-xl text-gray-900"
         />
 
         {/* 🎯 FILTER BUTTONS */}
@@ -299,7 +299,9 @@ export default function Home() {
           <button
             onClick={() => setFilter("all")}
             className={`px-3 py-1 rounded ${
-              filter === "all" ? "bg-purple-600 text-white" : "bg-gray-200"
+              filter === "all"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200 text-black"
             }`}
           >
             All
@@ -308,7 +310,9 @@ export default function Home() {
           <button
             onClick={() => setFilter("active")}
             className={`px-3 py-1 rounded ${
-              filter === "active" ? "bg-purple-600 text-white" : "bg-gray-200"
+              filter === "active"
+                ? "bg-purple-600 text-white"
+                : "bg-gray-200 text-black"
             }`}
           >
             Active
@@ -319,14 +323,14 @@ export default function Home() {
             className={`px-3 py-1 rounded ${
               filter === "completed"
                 ? "bg-purple-600 text-white"
-                : "bg-gray-200"
+                : "bg-gray-200 text-black"
             }`}
           >
             Completed
           </button>
         </div>
 
-        {/* Input */}
+        {/* ➕ INPUT */}
         <div className="flex gap-2 mb-6 text-gray-900">
           <input
             value={task}
@@ -346,7 +350,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Task List */}
+        {/* 📋 TASK LIST */}
         <ul className="space-y-3">
           {filteredTasks.length === 0 ? (
             <p className="text-center text-gray-500">
