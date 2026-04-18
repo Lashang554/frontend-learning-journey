@@ -337,6 +337,12 @@ const remaining = total - completed;
           </button>
         </div>
 
+        <div className="flex justify-between text-sm text-gray-600 mb-4">
+  <span>Total: {total}</span>
+  <span>Remaining: {remaining}</span>
+  <span>Completed: {completed}</span>
+</div>
+
         {/* ➕ INPUT */}
         <div className="flex gap-2 mb-6 text-gray-900">
           <input
