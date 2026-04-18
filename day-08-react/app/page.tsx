@@ -253,6 +253,9 @@ export default function Home() {
     newTasks[index].completed = !newTasks[index].completed;
     setTasks(newTasks);
   };
+  const clearCompleted = () => {
+  setTasks(tasks.filter((t) => !t.completed));
+};
 
   // 💾 Load from localStorage
   useEffect(() => {
