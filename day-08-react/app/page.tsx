@@ -343,6 +343,12 @@ const remaining = total - completed;
   <span>Completed: {completed}</span>
 </div>
 
+<button
+  onClick={clearCompleted}
+  className="w-full mb-4 py-2 bg-blue-500 text-white rounded-xl hover:bg-blue-600 transition"
+>
+  Clear Completed
+</button>
         {/* ➕ INPUT */}
         <div className="flex gap-2 mb-6 text-gray-900">
           <input
