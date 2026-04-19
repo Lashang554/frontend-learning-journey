@@ -28,6 +28,14 @@ type Movie = {
   original_language: string;
 };
 
+type SimilarMovie = {
+  id: number;
+  title: string;
+  poster_path: string | null;
+  release_date: string;
+  vote_average: number;
+};
+
 type CastMember = {
   id: number;
   name: string;
@@ -56,7 +64,91 @@ const fmtRuntime = (min: number) => {
 
 const IMG = "https://image.tmdb.org/t/p";
 
-/* ─── Component ──────────────────────────────────────────── */
+/* ─── Similar Movies Row Component ──────────────────────── */
+function SimilarMoviesRow({
+  movies,
+  onSelect,
+}: {
+  movies: SimilarMovie[];
+  onSelect: (id: number) => void;
+}) {
+  if (!movies.length) return null;
+
+  return (
+    <div className="mb-16">
+      {/* Section header */}
+      <div className="flex items-center gap-4 mb-5">
+        <div className="w-8 h-[2px] bg-[#e8392a]" />
+        <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] font-medium">
+          You Might Also Like
+        </p>
+        <div className="flex-1 h-px bg-white/5" />
+        <span className="text-[11px] text-[#8a8880] tracking-wide">{movies.length} films</span>
+      </div>
+
+      {/* Horizontal scrollable row */}
+      <div
+        className="flex gap-4 overflow-x-auto pb-4"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+      >
+        <style>{`.similar-row::-webkit-scrollbar{display:none}`}</style>
+        {movies.map((movie, i) => (
+          <div
+            key={movie.id}
+            onClick={() => onSelect(movie.id)}
+            className="group flex-shrink-0 w-[130px] cursor-pointer"
+            style={{ animationDelay: `${i * 40}ms` }}
+          >
+            {/* Poster card */}
+            <div className="relative w-[130px] h-[195px] rounded-xl overflow-hidden bg-[#1c1c26] border border-white/[.07] mb-2.5 transition-all duration-300 group-hover:-translate-y-1.5 group-hover:border-white/25 group-hover:shadow-[0_16px_32px_rgba(0,0,0,.7)]">
+              {movie.poster_path ? (
+                <img
+                  src={`${IMG}/w342${movie.poster_path}`}
+                  alt={movie.title}
+                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  loading="lazy"
+                />
+              ) : (
+                <div className="w-full h-full flex items-center justify-center opacity-20 text-3xl">
+                  🎬
+                </div>
+              )}
+
+              {/* Dark overlay on hover */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+
+              {/* Rating pill — slides up on hover */}
+              <div className="absolute bottom-2.5 left-0 right-0 flex justify-center translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300">
+                <span className="text-[#d4a843] text-[11px] font-medium bg-black/80 px-2.5 py-1 rounded-full border border-[#d4a843]/30">
+                  ★ {movie.vote_average ? movie.vote_average.toFixed(1) : "—"}
+                </span>
+              </div>
+
+              {/* Play icon */}
+              <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                <div className="w-10 h-10 rounded-full bg-black/60 border border-white/25 flex items-center justify-center backdrop-blur-sm">
+                  <svg width="12" height="12" viewBox="0 0 16 16" fill="white">
+                    <path d="M5 3.5l9 4.5-9 4.5V3.5z" />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            {/* Title */}
+            <p className="text-[12px] font-medium text-[#f0ede8] line-clamp-2 leading-snug mb-1 group-hover:text-white transition-colors">
+              {movie.title}
+            </p>
+            <p className="text-[11px] text-[#8a8880] tracking-wide">
+              {movie.release_date?.slice(0, 4) || "—"}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ─── Main Page ──────────────────────────────────────────── */
 export default function MovieDetail() {
   const { id } = useParams<{ id: string }>();
   const router = useRouter();
@@ -64,6 +156,7 @@ export default function MovieDetail() {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [cast, setCast] = useState<CastMember[]>([]);
   const [trailer, setTrailer] = useState<Video | null>(null);
+  const [similar, setSimilar] = useState<SimilarMovie[]>([]);
   const [loading, setLoading] = useState(true);
   const [showTrailer, setShowTrailer] = useState(false);
 
@@ -71,32 +164,56 @@ export default function MovieDetail() {
 
   useEffect(() => {
     if (!id) return;
+    setLoading(true);
+    setMovie(null);
+    setCast([]);
+    setTrailer(null);
+    setSimilar([]);
+
     const fetchAll = async () => {
       try {
-        const [movieRes, creditsRes, videosRes] = await Promise.all([
+        const [movieRes, creditsRes, videosRes, similarRes] = await Promise.all([
           fetch(`https://api.themoviedb.org/3/movie/${id}?api_key=${KEY}`),
           fetch(`https://api.themoviedb.org/3/movie/${id}/credits?api_key=${KEY}`),
           fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${KEY}`),
+          fetch(`https://api.themoviedb.org/3/movie/${id}/similar?api_key=${KEY}&language=en-US&page=1`),
         ]);
-        const [movieData, creditsData, videosData] = await Promise.all([
+
+        const [movieData, creditsData, videosData, similarData] = await Promise.all([
           movieRes.json(),
           creditsRes.json(),
           videosRes.json(),
+          similarRes.json(),
         ]);
+
         setMovie(movieData);
         setCast((creditsData.cast || []).slice(0, 12));
+
         const yt = (videosData.results || []).find(
           (v: Video) => v.site === "YouTube" && v.type === "Trailer"
         );
         setTrailer(yt || null);
+
+        setSimilar(
+          (similarData.results || [])
+            .filter((m: SimilarMovie) => m.poster_path)
+            .slice(0, 14)
+        );
       } catch (e) {
         console.error(e);
       } finally {
         setLoading(false);
       }
     };
+
     fetchAll();
   }, [id, KEY]);
+
+  // Navigate to a similar movie, scroll back to top smoothly
+  const goToMovie = (movieId: number) => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+    setTimeout(() => router.push(`/movie/${movieId}`), 200);
+  };
 
   /* ── Loading ── */
   if (loading) {
@@ -153,7 +270,6 @@ export default function MovieDetail() {
         <div className="absolute inset-0 bg-gradient-to-t from-[#0a0a0c] via-[#0a0a0c]/40 to-transparent" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0a0a0c]/80 via-transparent to-transparent" />
 
-        {/* Back */}
         <button
           onClick={() => router.back()}
           className="absolute top-6 left-6 flex items-center gap-2 text-[13px] text-[#f0ede8]/70 hover:text-[#f0ede8] transition-colors"
@@ -165,7 +281,7 @@ export default function MovieDetail() {
         </button>
       </div>
 
-      {/* ── Content ── */}
+      {/* ── Main content ── */}
       <div className="max-w-5xl mx-auto px-6 -mt-40 relative z-10">
 
         <div className="flex gap-8 items-end mb-10">
@@ -212,7 +328,6 @@ export default function MovieDetail() {
               </p>
             )}
 
-            {/* Stats row */}
             <div className="flex flex-wrap items-center gap-4 text-sm mb-5">
               <span
                 className="text-[22px] font-semibold tabular-nums"
@@ -231,7 +346,6 @@ export default function MovieDetail() {
               <span className="text-[#8a8880] text-[13px] uppercase tracking-wider">{movie.status}</span>
             </div>
 
-            {/* Trailer button */}
             {trailer && (
               <button
                 onClick={() => setShowTrailer(true)}
@@ -255,25 +369,18 @@ export default function MovieDetail() {
         {/* Overview */}
         {movie.overview && (
           <div className="max-w-3xl mb-10">
-            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-3 font-medium">
-              Overview
-            </p>
-            <p className="text-[15px] text-[#c8c5c0] leading-relaxed font-light">
-              {movie.overview}
-            </p>
+            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-3 font-medium">Overview</p>
+            <p className="text-[15px] text-[#c8c5c0] leading-relaxed font-light">{movie.overview}</p>
           </div>
         )}
 
-        {/* Stats grid */}
+        {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
           {[
             { label: "Budget", value: fmt(movie.budget) },
             { label: "Revenue", value: fmt(movie.revenue) },
             { label: "Language", value: movie.original_language?.toUpperCase() || "N/A" },
-            {
-              label: "Spoken",
-              value: movie.spoken_languages?.map((l) => l.english_name).join(", ") || "N/A",
-            },
+            { label: "Spoken", value: movie.spoken_languages?.map((l) => l.english_name).join(", ") || "N/A" },
           ].map(({ label, value }) => (
             <div key={label} className="bg-[#16161e] border border-white/[.07] rounded-xl p-4">
               <p className="text-[10px] tracking-[.18em] uppercase text-[#8a8880] mb-1.5">{label}</p>
@@ -285,10 +392,8 @@ export default function MovieDetail() {
         {/* Cast */}
         {cast.length > 0 && (
           <div className="mb-10">
-            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-5 font-medium">
-              Cast
-            </p>
-            <div className="flex gap-4 overflow-x-auto pb-3">
+            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-5 font-medium">Cast</p>
+            <div className="flex gap-4 overflow-x-auto pb-3" style={{ scrollbarWidth: "none" }}>
               {cast.map((person) => (
                 <div key={person.id} className="flex-shrink-0 w-[96px] group">
                   <div className="w-[96px] h-[116px] rounded-xl overflow-hidden bg-[#1c1c26] border border-white/[.07] mb-2 transition-all duration-300 group-hover:border-white/20 group-hover:shadow-[0_8px_20px_rgba(0,0,0,.5)]">
@@ -302,12 +407,8 @@ export default function MovieDetail() {
                       <div className="w-full h-full flex items-center justify-center text-2xl text-[#8a8880]">👤</div>
                     )}
                   </div>
-                  <p className="text-[12px] font-medium text-[#f0ede8] leading-tight line-clamp-1">
-                    {person.name}
-                  </p>
-                  <p className="text-[11px] text-[#8a8880] mt-0.5 line-clamp-1 italic">
-                    {person.character}
-                  </p>
+                  <p className="text-[12px] font-medium text-[#f0ede8] leading-tight line-clamp-1">{person.name}</p>
+                  <p className="text-[11px] text-[#8a8880] mt-0.5 line-clamp-1 italic">{person.character}</p>
                 </div>
               ))}
             </div>
@@ -316,29 +417,26 @@ export default function MovieDetail() {
 
         {/* Production companies */}
         {movie.production_companies?.filter((c) => c.logo_path).length > 0 && (
-          <div className="mb-16">
-            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-5 font-medium">
-              Production
-            </p>
+          <div className="mb-10">
+            <p className="text-[11px] tracking-[.2em] uppercase text-[#e8392a] mb-5 font-medium">Production</p>
             <div className="flex flex-wrap gap-3 items-center">
-              {movie.production_companies
-                .filter((c) => c.logo_path)
-                .map((company) => (
-                  <div
-                    key={company.id}
-                    className="bg-[#16161e] border border-white/[.07] rounded-lg px-5 py-3"
-                  >
-                    <img
-                      src={`${IMG}/w154${company.logo_path}`}
-                      alt={company.name}
-                      className="h-7 object-contain"
-                      style={{ filter: "brightness(0) invert(.65)" }}
-                    />
-                  </div>
-                ))}
+              {movie.production_companies.filter((c) => c.logo_path).map((company) => (
+                <div key={company.id} className="bg-[#16161e] border border-white/[.07] rounded-lg px-5 py-3">
+                  <img
+                    src={`${IMG}/w154${company.logo_path}`}
+                    alt={company.name}
+                    className="h-7 object-contain"
+                    style={{ filter: "brightness(0) invert(.65)" }}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         )}
+
+        {/* ── Similar Movies Row ── */}
+        <SimilarMoviesRow movies={similar} onSelect={goToMovie} />
+
       </div>
 
       {/* ── Trailer modal ── */}

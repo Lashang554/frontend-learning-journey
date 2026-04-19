@@ -108,7 +108,7 @@ export default function Home() {
             className="text-[clamp(52px,10vw,88px)] leading-none tracking-wide"
             style={{ fontFamily: "'Bebas Neue', sans-serif" }}
           >
-            MOVIE<span className="text-[#e8392a]">EX</span>PLORER
+            LASHANG MOVIE<span className="text-[#e8392a]">EX</span>PLORER
           </h1>
           <p className="text-[13px] text-[#8a8880] mt-2 tracking-[.05em] font-light">
             Search millions of films — ratings, posters, release years
@@ -270,7 +270,7 @@ export default function Home() {
             ))}
           </div>
         )}
-
+      
       </div>
     </div>
   );
