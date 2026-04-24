@@ -58,10 +58,13 @@
 
 
 
-function lastName(str){
-return str . split (""). reverse () . join ("");
+// function lastName(str){
+// return str . split (""). reverse () . join ("");
+// }
+
+// console.log (lastName ('Tamang'));
+
+
+function handleClick() {
+  console.log("Button clicked");
 }
-
-console.log (lastName ('Tamang'));
-
-
