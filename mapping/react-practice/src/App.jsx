@@ -16,22 +16,48 @@
 
 
 // map object
-function App() {
+// function App() {
 
-const users = [
- {id:1,name:"Ram",age:20},
- {id:2,name:"Hari",age:22},
- {id:3,name:"Sita",age:19}
-];
+// const users = [
+//  {id:1,name:"Ram",age:20},
+//  {id:2,name:"Hari",age:22},
+//  {id:3,name:"Sita",age:19}
+// ];
 
-return (
+// return (
+// <div>
+// <h1>Users</h1>
+
+// {users.map((user)=>(
+// <div key={user.id}>
+// <h3>{user.name}</h3>
+// <p>{user.age}</p>
+// </div>
+// ))}
+
+// </div>
+// )
+
+// }
+
+// export default App;
+
+
+// Product cards
+function App(){
+
+const products = [
+{id:1,name:"Laptop",price:900},
+{id:2,name:"Phone",price:500}
+]
+
+return(
 <div>
-<h1>Users</h1>
 
-{users.map((user)=>(
-<div key={user.id}>
-<h3>{user.name}</h3>
-<p>{user.age}</p>
+{products.map(product=>(
+<div key={product.id}>
+<h2>{product.name}</h2>
+<p>${product.price}</p>
 </div>
 ))}
 
@@ -40,4 +66,4 @@ return (
 
 }
 
-export default App;
+export default App
