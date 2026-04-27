@@ -44,21 +44,55 @@
 
 
 // Product cards
+// function App(){
+
+// const products = [
+// {id:1,name:"Laptop",price:900},
+// {id:2,name:"Phone",price:500}
+// ]
+
+// return(
+// <div>
+
+// {products.map(product=>(
+// <div key={product.id}>
+// <h2>{product.name}</h2>
+// <p>${product.price}</p>
+// </div>
+// ))}
+
+// </div>
+// )
+
+// }
+
+// export default App
+
+
+// Add search + map 
+import {useState} from "react";
+
 function App(){
 
-const products = [
-{id:1,name:"Laptop",price:900},
-{id:2,name:"Phone",price:500}
-]
+const [search,setSearch] = useState("");
+
+const users = ["Ram","Hari","Sita"];
+
+const filtered = users.filter(user =>
+ user.toLowerCase().includes(search.toLowerCase())
+);
 
 return(
 <div>
 
-{products.map(product=>(
-<div key={product.id}>
-<h2>{product.name}</h2>
-<p>${product.price}</p>
-</div>
+<input
+value={search}
+onChange={(e)=>setSearch(e.target.value)}
+placeholder="search"
+/>
+
+{filtered.map((user,index)=>(
+<p key={index}>{user}</p>
 ))}
 
 </div>
