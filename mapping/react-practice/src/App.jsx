@@ -13,6 +13,7 @@ function App() {
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
+  const hasResults = filteredUsers.length > 0;
 
   return (
     <main className="app">
@@ -36,15 +37,19 @@ function App() {
           Showing {filteredUsers.length} of {users.length} users
         </p>
 
-        <div className="user-grid">
-          {filteredUsers.map((user) => (
-            <article className="user-card" key={user.id}>
-              <h2>{user.name}</h2>
-              <p>{user.role}</p>
-              <span>{user.city}</span>
-            </article>
-          ))}
-        </div>
+        {hasResults ? (
+          <div className="user-grid">
+            {filteredUsers.map((user) => (
+              <article className="user-card" key={user.id}>
+                <h2>{user.name}</h2>
+                <p>{user.role}</p>
+                <span>{user.city}</span>
+              </article>
+            ))}
+          </div>
+        ) : (
+          <p className="empty-state">No users found. Try another name.</p>
+        )}
       </section>
     </main>
   );
