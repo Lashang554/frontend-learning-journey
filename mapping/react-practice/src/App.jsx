@@ -9,11 +9,20 @@ const users = [
 
 function App() {
   const [search, setSearch] = useState("");
+  const [favoriteIds, setFavoriteIds] = useState([]);
 
   const filteredUsers = users.filter((user) =>
     user.name.toLowerCase().includes(search.toLowerCase())
   );
   const hasResults = filteredUsers.length > 0;
+
+  function handleToggleFavorite(userId) {
+    setFavoriteIds((currentFavorites) =>
+      currentFavorites.includes(userId)
+        ? currentFavorites.filter((id) => id !== userId)
+        : [...currentFavorites, userId]
+    );
+  }
 
   return (
     <main className="app">
@@ -44,6 +53,15 @@ function App() {
                 <h2>{user.name}</h2>
                 <p>{user.role}</p>
                 <span>{user.city}</span>
+                <button
+                  className="favorite-button"
+                  onClick={() => handleToggleFavorite(user.id)}
+                  type="button"
+                >
+                  {favoriteIds.includes(user.id)
+                    ? "Saved favorite"
+                    : "Add favorite"}
+                </button>
               </article>
             ))}
           </div>
