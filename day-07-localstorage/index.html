@@ -22,6 +22,7 @@
         id="taskInput" 
         type="text" 
         placeholder="Enter task..."
+        onkeydown="handleInputKeydown(event)"
         class="flex-1 p-2 border rounded-lg"
       />
 
@@ -31,7 +32,8 @@
     </div>
 
     <!-- Clear -->
-    <div class="flex justify-end mt-2">
+    <div class="flex justify-between items-center mt-2">
+      <p id="taskCount" class="text-gray-500 text-sm">0 tasks</p>
       <button onclick="clearAll()" class="text-red-500 text-sm">
         Clear All
       </button>

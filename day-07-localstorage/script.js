@@ -66,7 +66,7 @@ function saveTasks() {
 // 4. Add task
 function addTask() {
   let input = document.getElementById("taskInput");
-  let value = input.value;
+  let value = input.value.trim();
 
   if (value === "") return;
 
@@ -81,8 +81,10 @@ function addTask() {
 // 5. Display tasks
 function displayTasks() {
   let list = document.getElementById("taskList");
+  let taskCount = document.getElementById("taskCount");
 
   list.innerHTML = "";
+  taskCount.innerText = `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`;
 
   for (let i = 0; i < tasks.length; i++) {
     let li = document.createElement("li");
@@ -92,6 +94,19 @@ function displayTasks() {
   }
 }
 
-// 6. Run on load
+// 6. Clear saved tasks
+function clearAll() {
+  tasks = [];
+  saveTasks();
+  displayTasks();
+}
+
+function handleInputKeydown(event) {
+  if (event.key === "Enter") {
+    addTask();
+  }
+}
+
+// 7. Run on load
 loadTasks();
 displayTasks();
