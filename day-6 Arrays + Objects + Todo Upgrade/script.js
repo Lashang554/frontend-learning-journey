@@ -3,7 +3,7 @@ let tasks = [];
 // Add Task
 function addTask() {
   let input = document.getElementById("taskInput");
-  let value = input.value;
+  let value = input.value.trim();
 
   if (value === "") return;
 
@@ -21,7 +21,9 @@ function addTask() {
 // Show Tasks
 function displayTasks() {
   let list = document.getElementById("taskList");
+  let taskCount = document.getElementById("taskCount");
   list.innerHTML = "";
+  taskCount.innerText = `${tasks.length} ${tasks.length === 1 ? "task" : "tasks"}`;
 
   for (let i = 0; i < tasks.length; i++) {
 
@@ -78,4 +80,10 @@ function displayTasks() {
 function clearAll() {
   tasks = [];
   displayTasks();
+}
+
+function handleInputKeydown(event) {
+  if (event.key === "Enter") {
+    addTask();
+  }
 }
