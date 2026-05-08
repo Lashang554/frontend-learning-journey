@@ -1,103 +1,53 @@
-// function App() {
+import { useState } from "react";
 
-// const users = ["Ram","Hari","Sita"];
+const users = [
+  { id: 1, name: "Ram", role: "Frontend Learner", city: "Kathmandu" },
+  { id: 2, name: "Hari", role: "React Student", city: "Pokhara" },
+  { id: 3, name: "Sita", role: "JavaScript Mentor", city: "Lalitpur" },
+  { id: 4, name: "Anita", role: "UI Designer", city: "Bhaktapur" },
+];
 
-// return (
-//   <div>
-//    {users.map((user,index)=>(
-//       <p key={index}>{user}</p>
-//    ))}
-//   </div>
-// )
+function App() {
+  const [search, setSearch] = useState("");
 
-// }
+  const filteredUsers = users.filter((user) =>
+    user.name.toLowerCase().includes(search.toLowerCase())
+  );
 
-// export default App;
+  return (
+    <main className="app">
+      <section className="directory">
+        <div className="directory__header">
+          <p className="eyebrow">React map practice</p>
+          <h1>Student Directory</h1>
+          <p>Search names and render matching user cards from an array.</p>
+        </div>
 
+        <label className="search-field">
+          <span>Search users</span>
+          <input
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder="Try Ram or Sita"
+          />
+        </label>
 
-// map object
-// function App() {
+        <p className="result-count">
+          Showing {filteredUsers.length} of {users.length} users
+        </p>
 
-// const users = [
-//  {id:1,name:"Ram",age:20},
-//  {id:2,name:"Hari",age:22},
-//  {id:3,name:"Sita",age:19}
-// ];
-
-// return (
-// <div>
-// <h1>Users</h1>
-
-// {users.map((user)=>(
-// <div key={user.id}>
-// <h3>{user.name}</h3>
-// <p>{user.age}</p>
-// </div>
-// ))}
-
-// </div>
-// )
-
-// }
-
-// export default App;
-
-
-// Product cards
-// function App(){
-
-// const products = [
-// {id:1,name:"Laptop",price:900},
-// {id:2,name:"Phone",price:500}
-// ]
-
-// return(
-// <div>
-
-// {products.map(product=>(
-// <div key={product.id}>
-// <h2>{product.name}</h2>
-// <p>${product.price}</p>
-// </div>
-// ))}
-
-// </div>
-// )
-
-// }
-
-// export default App
-
-
-// Add search + map 
-import {useState} from "react";
-
-function App(){
-
-const [search,setSearch] = useState("");
-
-const users = ["Ram","Hari","Sita"];
-
-const filtered = users.filter(user =>
- user.toLowerCase().includes(search.toLowerCase())
-);
-
-return(
-<div>
-
-<input
-value={search}
-onChange={(e)=>setSearch(e.target.value)}
-placeholder="search"
-/>
-
-{filtered.map((user,index)=>(
-<p key={index}>{user}</p>
-))}
-
-</div>
-)
-
+        <div className="user-grid">
+          {filteredUsers.map((user) => (
+            <article className="user-card" key={user.id}>
+              <h2>{user.name}</h2>
+              <p>{user.role}</p>
+              <span>{user.city}</span>
+            </article>
+          ))}
+        </div>
+      </section>
+    </main>
+  );
 }
 
-export default App
+export default App;
