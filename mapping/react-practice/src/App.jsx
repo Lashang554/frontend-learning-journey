@@ -9,11 +9,14 @@ const users = [
 
 function App() {
   const [search, setSearch] = useState("");
+  const [sortOrder, setSortOrder] = useState("name");
   const [favoriteIds, setFavoriteIds] = useState([]);
 
-  const filteredUsers = users.filter((user) =>
-    user.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredUsers = users
+    .filter((user) => user.name.toLowerCase().includes(search.toLowerCase()))
+    .sort((firstUser, secondUser) =>
+      firstUser[sortOrder].localeCompare(secondUser[sortOrder])
+    );
   const hasResults = filteredUsers.length > 0;
 
   function handleToggleFavorite(userId) {
@@ -33,14 +36,28 @@ function App() {
           <p>Search names and render matching user cards from an array.</p>
         </div>
 
-        <label className="search-field">
-          <span>Search users</span>
-          <input
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder="Try Ram or Sita"
-          />
-        </label>
+        <div className="controls">
+          <label className="search-field">
+            <span>Search users</span>
+            <input
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Try Ram or Sita"
+            />
+          </label>
+
+          <label className="sort-field">
+            <span>Sort by</span>
+            <select
+              value={sortOrder}
+              onChange={(event) => setSortOrder(event.target.value)}
+            >
+              <option value="name">Name</option>
+              <option value="city">City</option>
+              <option value="role">Role</option>
+            </select>
+          </label>
+        </div>
 
         <p className="result-count">
           Showing {filteredUsers.length} of {users.length} users
